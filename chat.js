@@ -1,8 +1,9 @@
 import React from "react";
+import ReactDOM from "react-dom";
 import route from "can-route";
 import DefineMap from "can-define/map/";
-import reactViewModel from "react-view-models";
-import Messages from "./messages";
+import reactViewModel from "react-view-model";
+import Messages from "./components/messages";
 
 const AppVM = DefineMap.extend({
 	page: "string",
@@ -16,7 +17,7 @@ const AppVM = DefineMap.extend({
 	}
 });
 
-const template = reactViewModel(AppVM, (props) => (
+const App = reactViewModel(AppVM, (props) => (
 	<div className="container">
 		<div className="row">
 			<div className="col-sm-8 col-sm-offset-2">
@@ -39,11 +40,13 @@ const template = reactViewModel(AppVM, (props) => (
 	</div>
 ));
 
-const appVM = new AppVM();
+var div = document.createElement('div');
+document.body.appendChild(div);
 
-route.data = appVM;
-route("{page}", { page: "home" });
-route.ready();
+ReactDOM.render(<App ref={register} />, div);
 
-const frag = template(appVM);
-document.body.appendChild(frag);
+function register(app) {
+	route.data = app.viewModel;
+	route("{page}", { page: "home" });
+	route.ready();
+}

@@ -1,9 +1,9 @@
 import React from "react";
 import route from "can-route";
 import DefineMap from "can-define/map/";
-import { Component } from "react-view-models";
-import { PromiseViewModel } from "react-view-models/helpers/";
-import Message from "./models/message";
+import { Component } from "react-view-model";
+import PromiseViewModel from "react-view-model/helpers/promise";
+import Message from "../models/message";
 
 export default class Messages extends Component {
 	render() {
