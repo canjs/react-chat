@@ -17,7 +17,7 @@ const AppVM = DefineMap.extend({
 	}
 });
 
-const App = reactViewModel(AppVM, (props) => (
+const App = reactViewModel('App', AppVM, (props) => (
 	<div className="container">
 		<div className="row">
 			<div className="col-sm-8 col-sm-offset-2">
