@@ -2,43 +2,50 @@ import React from "react";
 import ReactDOM from "react-dom";
 import route from "can-route";
 import DefineMap from "can-define/map/";
-import reactViewModel from "react-view-model";
+import { Component } from "react-view-model";
 import Messages from "./components/messages";
 
-const AppVM = DefineMap.extend({
+export const ViewModel = DefineMap.extend('AppVM', {
 	page: "string",
 	message: {
 		type: "string",
 		value: "Chat Home",
 		serialize: false
-	},
-	addExcitement: function() {
-		this.message = this.message + "!";
 	}
 });
 
-const App = reactViewModel('App', AppVM, (props) => (
-	<div className="container">
-		<div className="row">
-			<div className="col-sm-8 col-sm-offset-2">
-				{ props.page === "home" ? (
-					<div>
-						<h1
-							className="page-header text-center"
-							onClick={ () => props.addExcitement() }
-						>{props.message}</h1>
-						<a
-							href={route.url({ page: "chat" })}
-							className="btn btn-primary btn-block btn-lg"
-						>Start chat</a>
+export default class App extends Component {
+	addExcitement() {
+		this.message = this.message + "!";
+	}
+
+	render() {
+		return (
+			<div className="container">
+				<div className="row">
+					<div className="col-sm-8 col-sm-offset-2">
+						{ this.viewModel.page === "home" ? (
+							<div>
+								<h1
+									className="page-header text-center"
+									onClick={ () => this.addExcitement() }
+								>{this.viewModel.message}</h1>
+								<a
+									href={route.url({ page: "chat" })}
+									className="btn btn-primary btn-block btn-lg"
+								>Start chat</a>
+							</div>
+						) : (
+							<Messages />
+						) }
 					</div>
-				) : (
-					<Messages />
-				) }
+				</div>
 			</div>
-		</div>
-	</div>
-));
+		);
+	}
+}
+
+App.ViewModel = ViewModel;
 
 var div = document.createElement('div');
 document.body.appendChild(div);
