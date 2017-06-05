@@ -4,7 +4,7 @@
   "main": "chat.js",
   "scripts": {
     "eslint": "eslint \"**/*.js\" --ignore-pattern \"dist\" --ignore-pattern \"node_modules\"",
-    "build": "npm run eslint && steal-tools build"
+    "build": "npm run eslint && NODE_ENV=production steal-tools build --envify"
   },
   "dependencies": {
     "can-connect": "^1.3.11",
