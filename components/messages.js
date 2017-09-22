@@ -1,14 +1,14 @@
 import React from "react";
 import route from "can-route";
 import DefineMap from "can-define/map/";
-import { Component } from "react-view-model";
+import Component from "react-view-model/component";
 import PromiseViewModel from "react-view-model/helpers/promise";
 import Message from "../models/message";
 
 export const ViewModel = DefineMap.extend('MessagesVM', {
 	messagesPromise: {
 		Type: PromiseViewModel,
-		value: Message.getList({}),
+		value: () => Message.getList({}),
 	},
 	name: {
 		type: "string",
@@ -58,7 +58,7 @@ export default class Messages extends Component {
 								<h4 className="list-group3--item-heading">{name}</h4>
 								<p className="list-group-item-text">{body}</p>
 							</div>
-						)).serialize() // TODO: iterable DefineList means no .serialize()
+						))
 					) : (
 						<div className="list-group-item">
 							<h4 className="list-group-item-heading">No messages</h4>

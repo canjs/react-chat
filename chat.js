@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import route from "can-route";
 import DefineMap from "can-define/map/";
-import { Component } from "react-view-model";
+import Component from "react-view-model/component";
 import Messages from "./components/messages";
 
 export const ViewModel = DefineMap.extend('AppVM', {
@@ -16,7 +16,7 @@ export const ViewModel = DefineMap.extend('AppVM', {
 
 export default class App extends Component {
 	addExcitement() {
-		this.message = this.message + "!";
+		this.viewModel.message = this.viewModel.message + "!";
 	}
 
 	render() {
