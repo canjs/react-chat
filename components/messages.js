@@ -1,59 +1,42 @@
 import React from "react";
 import route from "can-route";
-import DefineMap from "can-define/map/";
-import Component from "react-view-model/component";
-import PromiseViewModel from "react-view-model/helpers/promise";
 import Message from "../models/message";
+import { connect, ObserveObject } from "ylem";
+import { getAsync } from 'ylem/property-decorators';
 
-export const ViewModel = DefineMap.extend('MessagesVM', {
-	messagesPromise: {
-		Type: PromiseViewModel,
-		value: () => Message.getList({}),
-	},
-	name: {
-		type: "string",
-		value: ""
-	},
-	body: {
-		type: "string",
-		value: ""
+
+
+class Store extends ObserveObject {
+	@getAsync
+	get messages() {
+		return Message.getList({});
 	}
-});
+	messageInfo = {
+		name: "",
+		body: ""
+	}
 
-export default class Messages extends Component {
-	send(e) {
+	send = e => {
 		e && e.preventDefault();
-
 		new Message({
-			name: this.viewModel.name,
-			body: this.viewModel.body
+			name: this.messageInfo.name,
+			body: this.messageInfo.body
 		}).save().then(() => {
-			this.viewModel.body = "";
+			this.messageInfo.body = "";
 		});
 	}
+}
 
-	render() {
+const Messages = ({messages, messageInfo, send}) => {
+		console.log(messages)
 		return (
 			<div>
 				<h1 className="page-header text-center">Chat Messages</h1>
 				<h5><a href={route.url({ page: "home" })}>Home</a></h5>
 
-				{ this.viewModel.messagesPromise.isPending ? (
-					<div className="list-group-item list-group-item-info">
-						<h4 className="list-group-item-heading">Loading...</h4>
-					</div>
-				) : null }
-
-				{ this.viewModel.messagesPromise.isRejected ? (
-					<div className="list-group-item list-group-item-danger">
-						<h4 className="list-group3--item-heading">Error</h4>
-						<p className="list-group-item-text">{this.viewModel.messagesPromise.reason}</p>
-					</div>
-				) : null }
-
-				{ this.viewModel.messagesPromise.isResolved ? (
-					this.viewModel.messagesPromise.value ? (
-						this.viewModel.messagesPromise.value.map(({ name, body }, key) => (
+				{ messages ? (
+					messages.length > 0 ? (
+						messages.map(({ name, body }, key) => (
 							<div className="list-group-item" key={key}>
 								<h4 className="list-group3--item-heading">{name}</h4>
 								<p className="list-group-item-text">{body}</p>
@@ -66,14 +49,14 @@ export default class Messages extends Component {
 					)
 				) : null }
 
-				<form className="row" onSubmit={ (e) => this.send(e) }>
+				<form className="row" onSubmit={send}>
 					<div className="col-sm-3">
 						<input
 							type="text"
 							className="form-control"
 							placeholder="Your name"
-							value={this.viewModel.name}
-							onChange={ (e) => this.viewModel.name = e.target.value }
+							value={messageInfo.name}
+							onChange={ (e) => messageInfo.name = e.target.value }
 						/>
 					</div>
 					<div className="col-sm-6">
@@ -81,8 +64,8 @@ export default class Messages extends Component {
 							type="text"
 							className="form-control"
 							placeholder="Your message"
-							value={this.viewModel.body}
-							onChange={ (e) => this.viewModel.body = e.target.value }
+							value={messageInfo.body}
+							onChange={ (e) => messageInfo.body = e.target.value }
 						/>
 					</div>
 					<div className="col-sm-3">
@@ -91,7 +74,6 @@ export default class Messages extends Component {
 				</form>
 			</div>
 		);
-	}
 }
 
-Messages.ViewModel = ViewModel;
+export default connect(Store)(Messages);
