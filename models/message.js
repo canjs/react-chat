@@ -1,6 +1,6 @@
 import DefineMap from "can-define/map/";
 import DefineList from "can-define/list/";
-import superMap from "can-connect/can/super-map/";
+import realtimeRestModel from "can-realtime-rest-model";
 
 const Message = DefineMap.extend("Message", {
 	id: "number",
@@ -10,17 +10,16 @@ const Message = DefineMap.extend("Message", {
 });
 
 Message.List = DefineList.extend("MessageList", {
-	"*": Message
+	"#": Message
 });
 
-Message.connection = superMap({
+Message.connection = realtimeRestModel({
 	url: {
 		resource: "https://chat.donejs.com/api/messages",
 		contentType: "application/x-www-form-urlencoded"
 	},
 	Map: Message,
 	List: Message.List,
-	name: "message"
 });
 
 export default Message;
